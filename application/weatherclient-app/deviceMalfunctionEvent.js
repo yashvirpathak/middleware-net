@@ -11,7 +11,7 @@ const schedule = require('node-schedule');
 async function main() {
 
     try {
-        const job = schedule.scheduleJob('* * 23 * *', function (fireDate) {
+        const job = schedule.scheduleJob('* * 23 * *', async (fireDate) =>{
             console.log('This job runs every 24 hours');
             await listenDeviceMalfunctionEvent();
         });

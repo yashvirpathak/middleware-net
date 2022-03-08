@@ -13,17 +13,17 @@ description: "Middleware Network"
 version: "1.0"
 
 client:
-  organization: weatherdevice
+  organization: weatherclient
   connection:
     timeout:
       peer:
-        endorser: 300
-        eventHub: 300
-        eventReg: 300
-      orderer: 300
+        endorser: 50
+        eventHub: 50
+        eventReg: 50
+      orderer: 50
 
 channels:
-  pharmachannel:
+  weatherchannel:
     orderers:
       - orderer.middleware-network.com
     peers:
@@ -31,12 +31,12 @@ channels:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
-        eventSource: false
+        eventSource: true
       peer1.weatherdevice.middleware-network.com:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
-        eventSource: false
+        eventSource: true
       peer0.weatherclient.middleware-network.com:
         endorsingPeer: true
         chaincodeQuery: true

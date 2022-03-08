@@ -13,6 +13,7 @@
   "author": "Yashvir",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.3",
     "fabric-client": "^1.4.19",
     "fabric-network": "^2.2.11",
     "js-yaml": "^4.1.0",

@@ -11,7 +11,7 @@ async function getContractInstance() {
     gateway = new Gateway();
 
     // A wallet is where the credentials to be used for this transaction exist
-    const wallet = await Wallets.newFileSystemWallet('./../weatherclient-app/identity/weatherdevice');
+    const wallet = await Wallets.newFileSystemWallet('./identity/weatherclient');
 
     // What is the username of this Client user accessing the network?
     const fabricUserName = 'WEATHERCLIENT_ADMIN';

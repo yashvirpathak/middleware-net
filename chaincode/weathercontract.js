@@ -35,7 +35,7 @@ class WeatherContract extends Contract {
             const coreKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.core', [deviceId.toLowerCase()]);
             const metadataKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.metadata', [deviceId.toLowerCase()]);
             const cityKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.city', [city.toLowerCase()]);
-            const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds');
+            const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds',[]);
 
             // core fields
             let coreFields = {
@@ -201,7 +201,7 @@ class WeatherContract extends Contract {
      * @param {Object} ctx - Transaction context 
      */
     async publishDeviceEvent(ctx) {
-        const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds');
+        const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds',[]);
         // get core device details from ledger
         let allDevices = await this.getStateInJson(ctx, devicesKey);
         let malfunctionDeviceDetails = [];

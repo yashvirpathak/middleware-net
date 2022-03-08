@@ -23,7 +23,7 @@ client.on('message', function (topic, message) {
             message: 'Device Data submitted on the Network',
             company: resolve
         };
-        res.json(result);
+        console.log(result);
     })
         .catch((e) => {
             const result = {
@@ -31,7 +31,7 @@ client.on('message', function (topic, message) {
                 message: 'Failed',
                 error: e
             };
-            res.status(500).send(result);
+            console.log(result);
         });
 
 })
