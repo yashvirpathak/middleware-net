@@ -1,0 +1,111 @@
+---
+#
+# The network connection profile provides client applications the information about the target
+# blockchain network that are necessary for the applications to interact with it. These are all
+# knowledge that must be acquired from out-of-band sources. This file provides such a source.
+#
+name: "network_middleware"
+
+x-type: "hlfv1"
+
+description: "Middleware Network"
+
+version: "1.0"
+
+client:
+  organization: weatherdevice
+  connection:
+    timeout:
+      peer:
+        endorser: 300
+        eventHub: 300
+        eventReg: 300
+      orderer: 300
+
+channels:
+  pharmachannel:
+    orderers:
+      - orderer.middleware-network.com
+    peers:
+      peer0.weatherdevice.middleware-network.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: false
+      peer1.weatherdevice.middleware-network.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: false
+      peer0.weatherclient.middleware-network.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: false
+      peer1.weatherclient.middleware-network.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: false
+      
+organizations:
+weatherdevice:
+    mspid: weatherdeviceMSP
+    peers:
+      - peer0.weatherdevice.middleware-network.com
+      - peer1.weatherdevice.middleware-network.com
+    certificateAuthorities:
+      - ca.weatherdevice.middleware-network.com
+weatherclient:
+    mspid: weatherclientMSP
+    peers:
+      - peer0.weatherclient.middleware-network.com
+      - peer1.weatherclient.middleware-network.com
+    certificateAuthorities:
+      - ca.weatherclient.middleware-network.com
+  
+orderers:
+  orderer.middleware-network.com:
+    url: grpc://localhost:7050
+    grpcOptions:
+      ssl-target-name-override: orderer.middleware-network.com
+
+peers:
+  peer0.weatherdevice.middleware-network.com:
+    url: grpc://localhost:7051
+    grpcOptions:
+      ssl-target-name-override: peer0.weatherdevice.middleware-network.com
+      request-timeout: 120001
+  peer1.weatherdevice.middleware-network.com:
+    url: grpc://localhost:7055
+    grpcOptions:
+      ssl-target-name-override: peer1.weatherdevice.middleware-network.com
+      request-timeout: 120001
+  peer0.weatherclient.middleware-network.com:
+    url: grpc://localhost:9051
+    grpcOptions:
+      ssl-target-name-override: peer0.weatherclient.middleware-network.com
+      request-timeout: 120001
+  peer1.weatherclient.middleware-network.com:
+    url: grpc://localhost:9055
+    grpcOptions:
+      ssl-target-name-override: peer1.weatherclient.middleware-network.com
+      request-timeout: 120001
+  
+certificateAuthorities:
+  ca.weatherdevice.middleware-network.com:
+    url: http://localhost:7054
+    httpOptions:
+      verify: false
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    caName: ca.weatherdevice.middleware-network.com
+  ca.weatherclient.middleware-network.com:
+    url: http://localhost:9054
+    httpOptions:
+      verify: false
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    caName: ca.weatherclient.middleware-network.com

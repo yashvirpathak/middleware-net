@@ -1,0 +1,5 @@
+{
+    "broker_host": "localhost",
+    "broker_port": 1883,
+    "subscribe_topics":["devices/weather","devices/hum","devices/co2"]
+}
