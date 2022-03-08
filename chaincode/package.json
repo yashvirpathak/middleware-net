@@ -1,0 +1,19 @@
+{
+    "name": "middlewarenet",
+    "version": "0.0.1",
+    "description": "Middleware Network",
+    "main": "index.js",
+    "scripts": {
+        "start-dev": "fabric-chaincode-node start --peer.address peer0.weatherdevice.middleware-network.com:7053 --chaincode-id-name weathernet:1.1",
+        "start": "fabric-chaincode-node start"
+    },
+    "engines": {
+        "node": ">=12.0.0",
+        "npm": ">=7.0.0"
+    },
+    "author": "Yashvir",
+    "dependencies": {
+        "fabric-contract-api": "^2.2.1",
+        "fabric-shim": "^2.2.1"
+    }
+}
