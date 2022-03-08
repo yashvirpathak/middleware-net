@@ -7,21 +7,21 @@ echo "\___ \    | |     / _ \   | |_) |   | |  "
 echo " ___) |   | |    / ___ \  |  _ <    | |  "
 echo "|____/    |_|   /_/   \_\ |_| \_\   |_|  "
 echo
-echo "Updating Chaincode PHARMANET On Pharma Network"
+echo "Updating Chaincode WEATHERNET On Middleware Network"
 echo
 CHANNEL_NAME="$1"
 DELAY="$2"
 LANGUAGE="$3"
 VERSION="$4"
 TYPE="$5"
-: ${CHANNEL_NAME:="pharmachannel"}
+: ${CHANNEL_NAME:="weatherchannel"}
 : ${DELAY:="5"}
 : ${LANGUAGE:="node"}
 : ${VERSION:=1.1}
 : ${TYPE="basic"}
 
 LANGUAGE=`echo "$LANGUAGE" | tr [:upper:] [:lower:]`
-ORGS="manufacturer distributor retailer consumer transporter"
+ORGS="weatherdevice weatherclient"
 TIMEOUT=15
 
 if [ "$TYPE" = "basic" ]; then
@@ -36,33 +36,21 @@ echo "New Version : "$VERSION
 . scripts/utils.sh
 
 ## Install new version of chaincode on peers of all 5 orgs making them endorsers
-echo "Installing chaincode on peer0.manufacturer.pharma-network.com.com ..."
-installChaincode 0 'manufacturer' $VERSION
-echo "Installing chaincode on peer1.manufacturer.pharma-network.com.com ..."
-installChaincode 1 'manufacturer' $VERSION
-echo "Installing chaincode on peer0.distributor.pharma-network.com.com ..."
-installChaincode 0 'distributor' $VERSION
-echo "Installing chaincode on peer1.distributor.pharma-network.com.com ..."
-installChaincode 1 'distributor' $VERSION
-echo "Installing chaincode on peer0.retailer.pharma-network.com.com ..."
-installChaincode 0 'retailer' $VERSION
-echo "Installing chaincode on peer1.retailer.pharma-network.com.com ..."
-installChaincode 1 'retailer' $VERSION
-echo "Installing chaincode on peer0.consumer.pharma-network.com.com ..."
-installChaincode 0 'consumer' $VERSION
-echo "Installing chaincode on peer1.consumer.pharma-network.com.com ..."
-installChaincode 1 'consumer' $VERSION
-echo "Installing chaincode on peer0.transporter.pharma-network.com.com ..."
-installChaincode 0 'transporter' $VERSION
-echo "Installing chaincode on peer1.transporter.pharma-network.com.com ..."
-installChaincode 1 'transporter' $VERSION
+echo "Installing chaincode on peer0.weatherdevice.middleware-network.com.com ..."
+installChaincode 0 'weatherdevice' $VERSION
+echo "Installing chaincode on peer1.weatherdevice.middleware-network.com.com ..."
+installChaincode 1 'weatherdevice' $VERSION
+echo "Installing chaincode on peer0.weatherclient.middleware-network.com.com ..."
+installChaincode 0 'weatherclient' $VERSION
+echo "Installing chaincode on peer1.weatherclient.middleware-network.com.com ..."
+installChaincode 1 'weatherclient' $VERSION
 
-# Upgrade chaincode on the channel using peer0.manufacturer
-echo "Upgrading chaincode on channel using peer0.manufacturer.pharma-network.com ..."
-upgradeChaincode 0 'manufacturer' $VERSION
+# Upgrade chaincode on the channel using peer0.weatherdevice
+echo "Upgrading chaincode on channel using peer0.weatherdevice.middleware-network.com ..."
+upgradeChaincode 0 'weatherdevice' $VERSION
 
 echo
-echo "========= All GOOD, Chaincode PHARMANET Is Now Updated To Version '$VERSION' =========== "
+echo "========= All GOOD, Chaincode WEATHERNET Is Now Updated To Version '$VERSION' =========== "
 echo
 
 echo
