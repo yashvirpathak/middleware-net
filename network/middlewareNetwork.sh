@@ -17,7 +17,7 @@ function printHelp() {
   echo "      - 'install' - install and instantiate a specific version of chaincode"
   echo "      - 'update' - update chaincode to a new version"
   echo "      - 'generate' - generate required certificates and genesis block"
-  echo "    -c <channel name> - channel name to use (defaults to \"pharmachannel\")"
+  echo "    -c <channel name> - channel name to use (defaults to \"weatherchannel\")"
   echo "    -t <timeout> - CLI timeout duration in seconds (defaults to 20)"
   echo "    -d <delay> - delay duration in seconds (defaults to 20)"
   echo "    -f <docker-compose-file> - specify which docker-compose file use (defaults to docker-compose-e2e.yaml)"
@@ -30,17 +30,17 @@ function printHelp() {
   echo "Typically, one would first generate the required certificates and "
   echo "genesis block, then bring up the network. e.g.:"
   echo
-  echo "	fabricNetwork.sh generate -c pharmachannel"
-  echo "	fabricNetwork up -c pharmachannel -s couchdb"
-  echo "        fabricNetwork up -c pharmachannel -s couchdb -i 1.4.0"
-  echo "	fabricNetwork up -l node"
-  echo "	fabricNetwork down -c pharmachannel"
+  echo "	middlewareNetwork.sh generate -c weatherchannel"
+  echo "	middlewareNetwork up -c weatherchannel -s couchdb"
+  echo "        middlewareNetwork up -c weatherchannel -s couchdb -i 1.4.0"
+  echo "	middlewareNetwork up -l node"
+  echo "	middlewareNetwork down -c weatherchannel"
   echo
   echo "Taking all defaults:"
-  echo "	fabricNetwork generate"
-  echo "	fabricNetwork up"
-  echo "	fabricNetwork install"
-  echo "	fabricNetwork down"
+  echo "	middlewareNetwork generate"
+  echo "	middlewareNetwork up"
+  echo "	middlewareNetwork install"
+  echo "	middlewareNetwork down"
 }
 
 # Ask user for confirmation to proceed
@@ -109,13 +109,13 @@ function checkPrereqs() {
   for UNSUPPORTED_VERSION in $BLACKLISTED_VERSIONS; do
     echo "$LOCAL_VERSION" | grep -q "$UNSUPPORTED_VERSION"
     if [ $? -eq 0 ]; then
-      echo "ERROR! Local Fabric binary version of $LOCAL_VERSION does not match this newer version of pharma-network and is unsupported. Either move to a later version of Fabric or checkout an earlier version of pharma-network."
+      echo "ERROR! Local Fabric binary version of $LOCAL_VERSION does not match this newer version of middleware-network and is unsupported. Either move to a later version of Fabric or checkout an earlier version of middleware-network."
       exit 1
     fi
 
     echo "$DOCKER_IMAGE_VERSION" | grep -q "$UNSUPPORTED_VERSION"
     if [ $? -eq 0 ]; then
-      echo "ERROR! Fabric Docker image version of $DOCKER_IMAGE_VERSION does not match this newer version of pharma-network and is unsupported. Either move to a later version of Fabric or checkout an earlier version of pharma-network."
+      echo "ERROR! Fabric Docker image version of $DOCKER_IMAGE_VERSION does not match this newer version of middleware-network and is unsupported. Either move to a later version of Fabric or checkout an earlier version of middleware-network."
       exit 1
     fi
   done
@@ -177,7 +177,7 @@ function networkDown() {
   if [ "$MODE" != "restart" ]; then
     # Bring down the network, deleting the volumes
     # Delete any ledger backups
-    docker run -v "$PWD":/tmp/pharmachannel --rm hyperledger/fabric-tools:"$IMAGETAG" rm -Rf /tmp/pharmachannel/ledgers-backup
+    docker run -v "$PWD":/tmp/weatherchannel --rm hyperledger/fabric-tools:"$IMAGETAG" rm -Rf /tmp/weatherchannel/ledgers-backup
     #Cleanup the chaincode containers
     clearContainers
     #Cleanup images
@@ -208,26 +208,14 @@ function replacePrivateKey() {
   # The next steps will replace the template's contents with the
   # actual values of the private key file names for the two CAs.
   CURRENT_DIR=$PWD
-  cd crypto-config/peerOrganizations/manufacturer.pharma-network.com/ca/ || exit
+  cd crypto-config/peerOrganizations/weatherdevice.middleware-network.com/ca/ || exit
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR" || exit
-  sed $OPTS "s/MANUFACTURER_CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yml
-  cd crypto-config/peerOrganizations/distributor.pharma-network.com/ca/ || exit
+  sed $OPTS "s/WEATHERDEVICE_CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yml
+  cd crypto-config/peerOrganizations/weatherclient.middleware-network.com/ca/ || exit
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR" || exit
-  sed $OPTS "s/DISTRIBUTOR_CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yml
-  cd crypto-config/peerOrganizations/retailer.pharma-network.com/ca/ || exit
-  PRIV_KEY=$(ls *_sk)
-  cd "$CURRENT_DIR" || exit
-  sed $OPTS "s/RETAILER_CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yml
-  cd crypto-config/peerOrganizations/consumer.pharma-network.com/ca/ || exit
-  PRIV_KEY=$(ls *_sk)
-  cd "$CURRENT_DIR" || exit
-  sed $OPTS "s/CONSUMER_CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yml
-  cd crypto-config/peerOrganizations/transporter.pharma-network.com/ca/ || exit
-  PRIV_KEY=$(ls *_sk)
-  cd "$CURRENT_DIR" || exit
-  sed $OPTS "s/TRANSPORTER_CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yml
+  sed $OPTS "s/WEATHERCLIENT_CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yml
   
   # cd crypto-config/peerOrganizations/upgrad.pharma-network.com/ca/ || exit
   # PRIV_KEY=$(ls *_sk)
@@ -294,7 +282,7 @@ function generateChannelArtifacts() {
   echo "### Generating channel configuration transaction 'channel.tx' ###"
   echo "#################################################################"
   set -x
-  configtxgen -profile PharmaChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID "$CHANNEL_NAME"
+  configtxgen -profile WeatherChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID "$CHANNEL_NAME"
   res=$?
   set +x
   if [ $res -ne 0 ]; then
@@ -304,69 +292,27 @@ function generateChannelArtifacts() {
 
   echo
   echo "#################################################################"
-  echo "#######    Generating anchor peer update for manufacturerMSP   ##########"
+  echo "#######    Generating anchor peer update for weatherdeviceMSP   ##########"
   echo "#################################################################"
   set -x
-  configtxgen -profile PharmaChannel -outputAnchorPeersUpdate ./channel-artifacts/manufacturerMSPanchors.tx -channelID "$CHANNEL_NAME" -asOrg manufacturerMSP
+  configtxgen -profile WeatherChannel -outputAnchorPeersUpdate ./channel-artifacts/weatherdeviceMSPanchors.tx -channelID "$CHANNEL_NAME" -asOrg weatherdeviceMSP
   res=$?
   set +x
   if [ $res -ne 0 ]; then
-    echo "Failed to generate anchor peer update for manufacturer..."
+    echo "Failed to generate anchor peer update for weatherdevice..."
     exit 1
   fi
 
   echo
   echo "#################################################################"
-  echo "#######    Generating anchor peer update for distributorMSP   ##########"
+  echo "#######    Generating anchor peer update for weatherclientMSP   ##########"
   echo "#################################################################"
   set -x
-  configtxgen -profile PharmaChannel -outputAnchorPeersUpdate ./channel-artifacts/distributorMSPanchors.tx -channelID "$CHANNEL_NAME" -asOrg distributorMSP
+  configtxgen -profile WeatherChannel -outputAnchorPeersUpdate ./channel-artifacts/weatherclientMSPanchors.tx -channelID "$CHANNEL_NAME" -asOrg weatherclientMSP
   res=$?
   set +x
   if [ $res -ne 0 ]; then
-    echo "Failed to generate anchor peer update for distributor..."
-    exit 1
-  fi
-  echo
-
-  echo
-  echo "#################################################################"
-  echo "#######    Generating anchor peer update for retailerMSP   ##########"
-  echo "#################################################################"
-  set -x
-  configtxgen -profile PharmaChannel -outputAnchorPeersUpdate ./channel-artifacts/retailerMSPanchors.tx -channelID "$CHANNEL_NAME" -asOrg retailerMSP
-  res=$?
-  set +x
-  if [ $res -ne 0 ]; then
-    echo "Failed to generate anchor peer update for retailer..."
-    exit 1
-  fi
-  echo
-
-  echo
-  echo "#################################################################"
-  echo "#######    Generating anchor peer update for consumerMSP   ##########"
-  echo "#################################################################"
-  set -x
-  configtxgen -profile PharmaChannel -outputAnchorPeersUpdate ./channel-artifacts/consumerMSPanchors.tx -channelID "$CHANNEL_NAME" -asOrg consumerMSP
-  res=$?
-  set +x
-  if [ $res -ne 0 ]; then
-    echo "Failed to generate anchor peer update for consumer..."
-    exit 1
-  fi
-  echo
-
-  echo
-  echo "#################################################################"
-  echo "#######    Generating anchor peer update for transporterMSP   ##########"
-  echo "#################################################################"
-  set -x
-  configtxgen -profile PharmaChannel -outputAnchorPeersUpdate ./channel-artifacts/transporterMSPanchors.tx -channelID "$CHANNEL_NAME" -asOrg transporterMSP
-  res=$?
-  set +x
-  if [ $res -ne 0 ]; then
-    echo "Failed to generate anchor peer update for transporter..."
+    echo "Failed to generate anchor peer update for weatherclient..."
     exit 1
   fi
   echo
@@ -378,8 +324,8 @@ function generateChannelArtifacts() {
 CLI_TIMEOUT=15
 # default for delay between commands
 CLI_DELAY=5
-# channel name defaults to "pharmachannel"
-CHANNEL_NAME="pharmachannel"
+# channel name defaults to "weatherchannel"
+CHANNEL_NAME="weatherchannel"
 # version for updating chaincode
 VERSION_NO=1.1
 # type of chaincode to be installed

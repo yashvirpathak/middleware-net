@@ -2,7 +2,7 @@ Organizations:
   - &OrdererOrg
     Name: Orderer
     ID: OrdererMSP
-    MSPDir: crypto-config/ordererOrganizations/pharma-network.com/msp
+    MSPDir: crypto-config/ordererOrganizations/middleware-network.com/msp
     Policies:
       Readers:
         Type: Signature
@@ -14,95 +14,41 @@ Organizations:
         Type: Signature
         Rule: "OR('OrdererMSP.member')"
 
-  - &manufacturer
-    Name: manufacturerMSP
-    ID: manufacturerMSP
-    MSPDir: crypto-config/peerOrganizations/manufacturer.pharma-network.com/msp
+  - &weatherdevice
+    Name: weatherdeviceMSP
+    ID: weatherdeviceMSP
+    MSPDir: crypto-config/peerOrganizations/weatherdevice.middleware-network.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('manufacturerMSP.admin', 'manufacturerMSP.peer', 'manufacturerMSP.client', 'manufacturerMSP.member')"
+        Rule: "OR('weatherdeviceMSP.admin', 'weatherdeviceMSP.peer', 'weatherdeviceMSP.client', 'weatherdeviceMSP.member')"
       Writers:
         Type: Signature
-        Rule: "OR('manufacturerMSP.admin', 'manufacturerMSP.peer', 'manufacturerMSP.client', 'manufacturerMSP.member')"
+        Rule: "OR('weatherdeviceMSP.admin', 'weatherdeviceMSP.peer', 'weatherdeviceMSP.client', 'weatherdeviceMSP.member')"
       Admins:
         Type: Signature
-        Rule: "OR('manufacturerMSP.admin', 'manufacturerMSP.peer', 'manufacturerMSP.client', 'manufacturerMSP.member')"
+        Rule: "OR('weatherdeviceMSP.admin', 'weatherdeviceMSP.peer', 'weatherdeviceMSP.client', 'weatherdeviceMSP.member')"
     AnchorPeers:
-      - Host: peer0.manufacturer.pharma-network.com
+      - Host: peer0.weatherdevice.middleware-network.com
         Port: 7051
 
-  - &distributor
-    Name: distributorMSP
-    ID: distributorMSP
-    MSPDir: crypto-config/peerOrganizations/distributor.pharma-network.com/msp
+  - &weatherclient
+    Name: weatherclientMSP
+    ID: weatherclientMSP
+    MSPDir: crypto-config/peerOrganizations/weatherclient.middleware-network.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('distributorMSP.admin', 'distributorMSP.peer', 'distributorMSP.client', 'distributorMSP.member')"
+        Rule: "OR('weatherclientMSP.admin', 'weatherclientMSP.peer', 'weatherclientMSP.client', 'weatherclientMSP.member')"
       Writers:
         Type: Signature
-        Rule: "OR('distributorMSP.admin', 'distributorMSP.peer', 'distributorMSP.client', 'distributorMSP.member')"
+        Rule: "OR('weatherclientMSP.admin', 'weatherclientMSP.peer', 'weatherclientMSP.client', 'weatherclientMSP.member')"
       Admins:
         Type: Signature
-        Rule: "OR('distributorMSP.admin', 'distributorMSP.peer', 'distributorMSP.client', 'distributorMSP.member')"
+        Rule: "OR('weatherclientMSP.admin', 'weatherclientMSP.peer', 'weatherclientMSP.client', 'weatherclientMSP.member')"
     AnchorPeers:
-      - Host: peer0.distributor.pharma-network.com
+      - Host: peer0.weatherclient.middleware-network.com
         Port: 9051
-
-  - &retailer
-    Name: retailerMSP
-    ID: retailerMSP
-    MSPDir: crypto-config/peerOrganizations/retailer.pharma-network.com/msp
-    Policies:
-      Readers:
-        Type: Signature
-        Rule: "OR('retailerMSP.admin', 'retailerMSP.peer', 'retailerMSP.client', 'retailerMSP.member')"
-      Writers:
-        Type: Signature
-        Rule: "OR('retailerMSP.admin', 'retailerMSP.peer', 'retailerMSP.client', 'retailerMSP.member')"
-      Admins:
-        Type: Signature
-        Rule: "OR('retailerMSP.admin', 'retailerMSP.peer', 'retailerMSP.client', 'retailerMSP.member')"
-    AnchorPeers:
-      - Host: peer0.retailer.pharma-network.com
-        Port: 8051
-
-  - &consumer
-    Name: consumerMSP
-    ID: consumerMSP
-    MSPDir: crypto-config/peerOrganizations/consumer.pharma-network.com/msp
-    Policies:
-      Readers:
-        Type: Signature
-        Rule: "OR('consumerMSP.admin', 'consumerMSP.peer', 'consumerMSP.client', 'consumerMSP.member')"
-      Writers:
-        Type: Signature
-        Rule: "OR('consumerMSP.admin', 'consumerMSP.peer', 'consumerMSP.client', 'consumerMSP.member')"
-      Admins:
-        Type: Signature
-        Rule: "OR('consumerMSP.admin', 'consumerMSP.peer', 'consumerMSP.client', 'consumerMSP.member')"
-    AnchorPeers:
-      - Host: peer0.consumer.pharma-network.com
-        Port: 6051
-
-  - &transporter
-    Name: transporterMSP
-    ID: transporterMSP
-    MSPDir: crypto-config/peerOrganizations/transporter.pharma-network.com/msp
-    Policies:
-      Readers:
-        Type: Signature
-        Rule: "OR('transporterMSP.admin', 'transporterMSP.peer', 'transporterMSP.client', 'transporterMSP.member')"
-      Writers:
-        Type: Signature
-        Rule: "OR('transporterMSP.admin', 'transporterMSP.peer', 'transporterMSP.client', 'transporterMSP.member')"
-      Admins:
-        Type: Signature
-        Rule: "OR('transporterMSP.admin', 'transporterMSP.peer', 'transporterMSP.client', 'transporterMSP.member')"
-    AnchorPeers:
-      - Host: peer0.transporter.pharma-network.com
-        Port: 5051
 
 
 
@@ -142,7 +88,7 @@ Application: &ApplicationDefaults
 Orderer: &OrdererDefaults
   OrdererType: solo
   Addresses:
-    - orderer.pharma-network.com:7050
+    - orderer.middleware-network.com:7050
   BatchTimeout: 2s
   BatchSize:
     MaxMessageCount: 30
@@ -197,23 +143,17 @@ Profiles:
       Capabilities:
         <<: *OrdererCapabilities
     Consortiums:
-      PharmaConsortium:
+      WeatherConsortium:
         Organizations:
-          - *manufacturer
-          - *distributor
-          - *retailer
-          - *consumer
-          - *transporter
+          - *weatherdevice
+          - *weatherclient
 
-  PharmaChannel:
-    Consortium: PharmaConsortium
+  WeatherChannel:
+    Consortium: WeatherConsortium
     Application:
       <<: *ApplicationDefaults
       Organizations:
-        - *manufacturer
-        - *distributor
-        - *retailer
-        - *consumer
-        - *transporter
+        - *weatherdevice
+        - *weatherclient
       Capabilities:
         <<: *ApplicationCapabilities
