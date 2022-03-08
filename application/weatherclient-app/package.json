@@ -1,0 +1,21 @@
+{
+  "name": "weatherclientapp",
+  "version": "1.0.0",
+  "description": "Utility for client applications to connect to Blockchain network",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=7.0.0"
+  },
+  "author": "Yashvir",
+  "license": "ISC",
+  "dependencies": {
+    "fabric-client": "^1.4.19",
+    "fabric-network": "^2.2.11",
+    "js-yaml": "^4.1.0",
+    "sendmail": "^1.6.1"
+  }
+}

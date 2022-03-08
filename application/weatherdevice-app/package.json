@@ -1,0 +1,21 @@
+{
+  "name": "weatherdeviceapp",
+  "version": "1.0.0",
+  "description": "Utility to subscribe device data and push it to Blockchain network",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=7.0.0"
+  },
+  "author": "Yashvir",
+  "license": "ISC",
+  "dependencies": {
+    "fabric-client": "^1.4.19",
+    "fabric-network": "^2.2.11",
+    "js-yaml": "^4.1.0",
+    "mqtt": "^4.3.4"
+  }
+}
