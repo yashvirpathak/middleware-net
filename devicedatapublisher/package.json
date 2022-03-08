@@ -1,0 +1,19 @@
+{
+  "name": "datapublisher",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Utility to publish IoT device data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yashvir",
+  "license": "ISC",
+  "dependencies": {
+    "mqtt": "^4.3.4"
+  },
+  "engines": {
+    "node": "~14.x.x",
+    "npm": "~6.x.x"
+  }
+}
