@@ -200,8 +200,30 @@ class WeatherContract extends Contract {
      * Function to emit event when any device malfunction
      * @param {Object} ctx - Transaction context 
      */
-    async publishDeviceEvent(ctx){
-        await ctx.stub.setEvent('deviceMalfunctionEvent', Buffer.from('weather_0'));
+    async publishDeviceEvent(ctx) {
+        const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds');
+        // get core device details from ledger
+        let allDevices = await this.getStateInJson(ctx, devicesKey);
+        let malfunctionDeviceDetails = [];
+
+        if (allDevices && allDevices.deviceIds) {
+            for (let index = 0; index < allDevices.deviceIds.length; index++) {
+                // get core device details from ledger
+                let deviceCurrentState = await this.getDeviceData(ctx, allDevices.deviceIds[index]);
+                
+                // checking last data submission
+                let deviceDataInterval = ((new Date()) - deviceCurrentState.createdDate);
+                if (deviceDataInterval > 86400000) {
+                    malfunctionDeviceDetails.push(deviceCurrentState);
+                }
+
+            }
+        }
+
+        // emitting event if device is inactive for 24 hours
+        if (malfunctionDeviceDetails.length > 0) {
+            await ctx.stub.setEvent('deviceMalfunctionEvent', Buffer.from(JSON.stringify(malfunctionDeviceDetails)));
+        }
     }
 
     /**
