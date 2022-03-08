@@ -6,12 +6,16 @@
 
 const helper = require('./contractHelper');
 const sendmail = require('sendmail')();
+const schedule = require('node-schedule');
 
 async function main() {
 
     try {
-
-    }catch(error) {
+        const job = schedule.scheduleJob('* * 23 * *', function (fireDate) {
+            console.log('This job runs every 24 hours');
+            await listenDeviceMalfunctionEvent();
+        });
+    } catch (error) {
 
         console.log(`\n\n ${error} \n\n`);
         throw new Error(error);
