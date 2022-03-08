@@ -7,6 +7,7 @@ const addToWalletDevice = require('./addToWallet_device');
 const addToWalletClient = require('./addToWallet_client');
 const cityMeanTemperature = require('./cityMeanTemperature');
 const viewDeviceData = require('./viewDeviceData');
+const healthcheck = require('./healthcheck');
 const deviceMalfunctionEvent = require('./deviceMalfunctionEvent');
 
 // Define Express app settings
@@ -80,6 +81,26 @@ app.post('/cityMeanTemperature', (req, res) => {
         const result = {
             status: 'success',
             message: 'Get city Mean Temperature submitted on the Network',
+            currentstate: resolve
+        };
+        res.json(result);
+    })
+        .catch((e) => {
+            const result = {
+                status: 'error',
+                message: 'Failed',
+                error: e
+            };
+            res.status(500).send(result);
+        });
+});
+
+app.post('/healthcheck', (req, res) => {
+    healthcheck.execute().then((resolve, rejecet) => {
+        console.log('Network healthcheck submitted on the Network');
+        const result = {
+            status: 'success',
+            message: 'Network healthcheck submitted on the Network',
             currentstate: resolve
         };
         res.json(result);

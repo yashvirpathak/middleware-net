@@ -35,7 +35,7 @@ class WeatherContract extends Contract {
             const coreKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.core', [deviceId.toLowerCase()]);
             const metadataKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.metadata', [deviceId.toLowerCase()]);
             const cityKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.city', [city.toLowerCase()]);
-            const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds',[]);
+            const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds', []);
 
             // core fields
             let coreFields = {
@@ -201,7 +201,7 @@ class WeatherContract extends Contract {
      * @param {Object} ctx - Transaction context 
      */
     async publishDeviceEvent(ctx) {
-        const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds',[]);
+        const devicesKey = ctx.stub.createCompositeKey('org.middleware-network.weathernet.deviceIds', []);
         // get core device details from ledger
         let allDevices = await this.getStateInJson(ctx, devicesKey);
         let malfunctionDeviceDetails = [];
@@ -210,7 +210,7 @@ class WeatherContract extends Contract {
             for (let index = 0; index < allDevices.deviceIds.length; index++) {
                 // get core device details from ledger
                 let deviceCurrentState = await this.getDeviceData(ctx, allDevices.deviceIds[index]);
-                
+
                 // checking last data submission
                 let deviceDataInterval = ((new Date()) - deviceCurrentState.createdDate);
                 if (deviceDataInterval > 86400000) {
@@ -220,10 +220,18 @@ class WeatherContract extends Contract {
             }
         }
 
-        // emitting event if device is inactive for 24 hours
+        // emitting contract event if device is inactive for 24 hours
         if (malfunctionDeviceDetails.length > 0) {
             await ctx.stub.setEvent('deviceMalfunctionEvent', Buffer.from(JSON.stringify(malfunctionDeviceDetails)));
         }
+    }
+
+    /**
+     * Network healthcheck function
+     * @param {Object} ctx - Transaction context 
+     */
+    async healthcheck(ctx) {
+        return { health: 'Network is up' };
     }
 
     /**
