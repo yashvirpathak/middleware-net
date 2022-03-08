@@ -115,9 +115,6 @@ services:
     depends_on:
       - ca.weatherdevice.middleware-network.com
       - ca.weatherclient.middleware-network.com
-      - ca.retailer.middleware-network.com
-      - ca.consumer.middleware-network.com
-      - ca.transporter.middleware-network.com
       - orderer.middleware-network.com
       - peer0.weatherdevice.middleware-network.com
       - peer1.weatherdevice.middleware-network.com

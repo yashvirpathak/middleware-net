@@ -20,7 +20,7 @@ services:
       - FABRIC_CA_SERVER_CA_NAME=ca.weatherdevice.middleware-network.com
       - FABRIC_CA_SERVER_TLS_ENABLED=false
       # - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.weatherdevice.middleware-network.com-cert.pem
-      # - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/58ecf3c116d6d7fd762a8cd10dee1811579abcd8d6b516e4043888b695575990_sk
+      # - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/weatherdevice_CA_PRIVATE_KEY
     ports:
       - "7054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d' # --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.weatherdevice.middleware-network.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/754fccf4ad3f6a483161cf597b79fbdbdadaf1ee2f024e79da8c8e9b8bfb6dcb_sk
@@ -115,9 +115,6 @@ services:
     depends_on:
       - ca.weatherdevice.middleware-network.com
       - ca.weatherclient.middleware-network.com
-      - ca.retailer.middleware-network.com
-      - ca.consumer.middleware-network.com
-      - ca.transporter.middleware-network.com
       - orderer.middleware-network.com
       - peer0.weatherdevice.middleware-network.com
       - peer1.weatherdevice.middleware-network.com

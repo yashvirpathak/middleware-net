@@ -1,2 +1,4 @@
 node_modules/
 package-lock.json
+channel-artifacts/
+crypto-config/
